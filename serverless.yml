@@ -1,0 +1,76 @@
+service: serverlessPoc
+useDotenv: true
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  memorySize: 256
+  stage: ${opt:stage, 'dev'}
+  region: ${self:custom.region.${sls:stage}}
+  environment:
+    STAGE: ${sls:stage}
+    USER_TABLE_NAME: UserProfile-${sls:stage}
+    EXPIRE_TIME: 24
+    EXPIRE_KEY: hours
+    ACCESS_CONTROL_ALLOW_ORIGIN: ${self:custom.accessControlAllowOrigin.${sls:stage}}
+
+  iam:
+    role:
+      statements:
+        - ${file(iam/UserTableIAM.yml):UserTableIAM}
+
+functions:
+  userCreate:
+    handler: src/handlers/userCreate.handler
+    events:
+      - http:
+          method: POST
+          path: /create_user
+          cors: true
+  userList:
+    handler: src/handlers/userList.handler
+    events:
+      - http:
+          method: GET
+          path: /list_user
+          cors: true 
+  userSearch:
+    handler: src/handlers/userSearch.handler
+    events:
+      - http:
+          method: GET
+          path: /search_user
+          cors: true
+  userDelete:
+    handler: src/handlers/userDelete.handler
+    events:
+      - http:
+          method: DELETE
+          path: /delete_user
+          cors: true
+  userUpdate:
+    handler: src/handlers/userUpdate.handler
+    events:
+      - http:
+          method: PUT
+          path: /update_user
+          cors: true
+
+custom:
+  UserTableName: UserProfile-${sls:stage}
+  region:
+    dev: us-east-1
+    testing: us-east-1
+    staging: us-east-1
+    prod: us-east-1
+
+  accessControlAllowOrigin:
+    dev: "*"
+    testing: "*"
+    staging: "*"
+    prod: "*"
+
+resources:
+  - ${file(resources/UserTable.yml)}
+
