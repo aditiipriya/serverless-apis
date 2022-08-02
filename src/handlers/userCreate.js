@@ -1,6 +1,10 @@
 const AWS = require("aws-sdk");
 const { responseHandler } = require("../lib/response");
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
+const { 
+  v1: uuidv1,
+  v4: uuidv4,
+} = require('uuid');
 
 const userCreate = async (event, context) => {
   const data = JSON.parse(event.body);
@@ -8,11 +12,11 @@ const userCreate = async (event, context) => {
   if(!data.isDeleted){ data.isDeleted = 0 }
   if(!data.createdAt){ data.createdAt =  Date.now() }
   if(data.email && !data.name){ data.name = (data.email.charAt(0).toUpperCase() + data.email.slice(1)).substring(0,data.email.indexOf('@')) }
-
+  data.userId = uuidv1();
   let params = {};
   params = {
     TableName: process.env.USER_TABLE_NAME,
-    Item: data
+    Item: data,
   };
   try {
     let createUser =await dynamoDb.put(params).promise();
@@ -26,7 +30,7 @@ const userCreate = async (event, context) => {
     return responseHandler({
       statusCode: 500,
       message: "User Not Created",
-      data: '',
+      data: 'Error: '+ error,
     });
   }
   

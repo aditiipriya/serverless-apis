@@ -22,7 +22,7 @@ const userDelete = async (event, context) => {
     return responseHandler({
       statusCode: 500,
       message: "User Not Deleted",
-      data: "",
+      data: "Error: "+ error,
     });
   }
 };

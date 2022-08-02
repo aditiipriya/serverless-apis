@@ -4,15 +4,16 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 const userUpdate = async (event, context) => {
   const data = JSON.parse(event.body);
-  data.timestamp = Date.now();
+  data.updatedAt = Date.now();
   let params = {};
   params = {
     TableName: process.env.USER_TABLE_NAME,
     Key: { email: data.email, userName: data.userName },
     ExpressionAttributeNames: { "#name": "name", "#updatedAt": "updatedAt" },
+    ConditionExpression: 'attribute_exists(email)',
     ExpressionAttributeValues: {
       ":name": data.name,
-      ":updatedAt": data.timestamp,
+      ":updatedAt": data.updatedAt,
     },
     UpdateExpression: "SET #name = :name, #updatedAt = :updatedAt",
   };
@@ -30,7 +31,7 @@ const userUpdate = async (event, context) => {
     return responseHandler({
       statusCode: 500,
       message: "User Not Updated",
-      data: "",
+      data: "Error: "+ error,
     });
   }
 };

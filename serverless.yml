@@ -56,6 +56,13 @@ functions:
           method: PUT
           path: /update_user
           cors: true
+  findUserById:
+    handler: src/handlers/findUserById.handler
+    events:
+      - http:
+          method: GET
+          path: /getuserbyid_user
+          cors: true
 
 custom:
   UserTableName: UserProfile-${sls:stage}

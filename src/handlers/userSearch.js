@@ -26,7 +26,7 @@ const userSearch = async (event, context) => {
     return responseHandler({
       statusCode: 500,
       message: "Something went wrong !!",
-      data: "",
+      data: "Error: "+ error,
     });
   }
 };
