@@ -1,5 +1,6 @@
 service: serverlessPoc
 useDotenv: true
+
 frameworkVersion: '3'
 
 provider:
@@ -14,6 +15,9 @@ provider:
     EXPIRE_TIME: 24
     EXPIRE_KEY: hours
     ACCESS_CONTROL_ALLOW_ORIGIN: ${self:custom.accessControlAllowOrigin.${sls:stage}}
+    SENDGRID_KEY: ${self:custom.sendgridkey.${sls:stage}}
+    SENDGRID_FROM_EMAIL: ${self:custom.sendgridfromemail.${sls:stage}}
+    SENDGRID_TO_EMAIL: ${self:custom.sendgridtoemail.${sls:stage}}
 
   iam:
     role:
@@ -80,6 +84,22 @@ custom:
     testing: "*"
     staging: "*"
     prod: "*"
+
+  sendgridkey:
+    dev: ${env:SENDGRID_KEY}
+    staging: ${env:SENDGRID_KEY}
+    prod: ${env:SENDGRID_KEY}
+  
+  sendgridfromemail:
+    dev: ${env:SENDGRID_FROM_EMAIL}
+    staging: ${env:SENDGRID_FROM_EMAIL}
+    prod: ${env:SENDGRID_FROM_EMAIL}
+
+  sendgridtoemail:
+    dev: ${env:SENDGRID_TO_EMAIL}
+    staging: ${env:SENDGRID_TO_EMAIL}
+    prod: ${env:SENDGRID_TO_EMAIL}
+
 
 resources:
   - ${file(resources/UserTable.yml)}

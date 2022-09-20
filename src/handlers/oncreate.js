@@ -2,16 +2,14 @@ const AWS = require("aws-sdk");
 const { responseHandler } = require("../lib/response");
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 const sgMail = require('@sendgrid/mail');
-// const SENDGRID_KEY =  process.env.SENDGRID_KEY; 
-// const SENDGRID_FROM_EMAIL = process.env.SENDGRID_FROM_EMAIL; 
-// const SENDGRID_TO_EMAIL = process.env.SENDGRID_TO_EMAIL;
-const SENDGRID_KEY="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";
-const SENDGRID_FROM_EMAIL="aditipriya@yopmail.com";
-const SENDGRID_TO_EMAIL="aditi.mobcoder@gmail.com";
+const SENDGRID_KEY =  process.env.SENDGRID_KEY; 
+const SENDGRID_FROM_EMAIL = process.env.SENDGRID_FROM_EMAIL; 
+const SENDGRID_TO_EMAIL = process.env.SENDGRID_TO_EMAIL;
+
 sgMail.setApiKey(SENDGRID_KEY);
 
 const oncreate = async (event, context) => {
-  console.log("....Oncreate hitted....SENDGRID_FROM_EMAIL..............." , SENDGRID_FROM_EMAIL  );
+  console.log("....Oncreate hit....SENDGRID_FROM_EMAIL..............." , SENDGRID_FROM_EMAIL  );
 
   const sendCustomMailTemplate = async ( SENDGRID_FROM_EMAIL, SENDGRID_TO_EMAIL) => {
     const msg = {
