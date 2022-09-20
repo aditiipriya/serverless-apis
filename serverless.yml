@@ -63,7 +63,10 @@ functions:
           method: GET
           path: /getuserbyid_user
           cors: true
-
+  oncreate:
+    handler: src/handlers/oncreate.handler
+    events: 
+      - stream: arn:aws:dynamodb:us-east-1:347798491357:table/UserProfile-dev/stream/2022-08-22T09:22:32.059
 custom:
   UserTableName: UserProfile-${sls:stage}
   region:
